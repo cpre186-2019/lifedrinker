@@ -58,7 +58,7 @@ def updateOneFlywheel(speed, choice):
     if (choice != 0 and choice != 1):
         #error!
         print("error!")
-    else if (choice == 0):
+    elif (choice == 0):
         print("bottom motor updating...")
     else:
         print("top motor updating...")
