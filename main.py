@@ -7,7 +7,8 @@ import cv2 # openCV library
 import functions # local functions, syntax is functions.(method)(args)
 import mainsetup # setup function, runs once.
 import mainloop # loop-dee-loop
+import vision # our vision code!
 
 print(functions.map(10, 0, 100, 0, 5000))
-mainsetup.setup()
-mainloop.mainLoop()
+# mainsetup.setup()
+# mainloop.mainLoop()
