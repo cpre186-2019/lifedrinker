@@ -2,7 +2,7 @@
 # Spring 2019
 # Written by: Alexis Renderos
 
-from pyFirmata import Arduino, util # used to talk to Arduino over USB.
+from pyfirmata import Arduino, util # used to talk to Arduino over USB.
 import cv2 # openCV library
 
 def setup():
