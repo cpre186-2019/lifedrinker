@@ -46,7 +46,7 @@ if __name__ == '__main__' :
         sys.exit()
 
     # Define an initial bounding box within first frame (change this for a specific area)
-    bbox = (287, 23, 86, 320)
+    # bbox = (287, 23, 86, 320)
 
     # Uncomment the line below to select a different bounding box
     bbox = cv2.selectROI(frame, False)
@@ -79,9 +79,9 @@ if __name__ == '__main__' :
 
             frame_width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)
             frame_height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
-            video_center = [int(frame_width/2.0), int(frame_height/2.0)]
+            video_center = (int(frame_width/2.0), int(frame_height/2.0))
 
-            target_center = [int((p2[0]-p1[0])/2.0), int((p2[1]-p2[1])/2.0)]
+            target_center = (int(p1[0]+(bbox[2]/2.0)),int(p1[1]+(bbox[3]/2.0)))
             cv2.line(frame, video_center, target_center, (0,255,0), 2)
 
         else :
