@@ -32,7 +32,7 @@ if __name__ == '__main__' :
             tracker = cv2.TrackerCSRT_create()
 
     # Read video
-    video = cv2.VideoCapture("videos/chaplin.mp4")
+    video = cv2.VideoCapture("videos/StreetHighRes.mp4")
 
     # Exit if video not opened.
     if not video.isOpened():
@@ -45,7 +45,7 @@ if __name__ == '__main__' :
         print('Cannot read video file')
         sys.exit()
 
-    # Define an initial bounding box
+    # Define an initial bounding box within first frame (change this for a specific area)
     bbox = (287, 23, 86, 320)
 
     # Uncomment the line below to select a different bounding box
@@ -75,6 +75,15 @@ if __name__ == '__main__' :
             p1 = (int(bbox[0]), int(bbox[1]))
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+            # from this information we can then derive distance from center and angle of correction using some fancy math.
+
+            frame_width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)
+            frame_height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            video_center = [int(frame_width/2.0), int(frame_height/2.0)]
+
+            target_center = [int((p2[0]-p1[0])/2.0), int((p2[1]-p2[1])/2.0)]
+            cv2.line(frame, video_center, target_center, (0,255,0), 2)
+
         else :
             # Tracking failure
             cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
@@ -86,7 +95,7 @@ if __name__ == '__main__' :
         cv2.putText(frame, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
         # Display result
-        cv2.imshow("Tracking", frame)
+        cv2.imshow("Tracking video", frame)
 
         # Exit if ESC pressed
         k = cv2.waitKey(1) & 0xff
