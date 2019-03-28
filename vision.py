@@ -54,6 +54,11 @@ if __name__ == '__main__' :
     # Initialize tracker with first frame and bounding box
     ok = tracker.init(frame, bbox)
 
+    # Calculate center of image and store in a tuple
+    frame_width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)
+    frame_height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    video_center = (int(frame_width/2.0), int(frame_height/2.0))
+
     while True:
         # Read a new frame
         ok, frame = video.read()
@@ -75,14 +80,12 @@ if __name__ == '__main__' :
             p1 = (int(bbox[0]), int(bbox[1]))
             p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
             cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+
             # from this information we can then derive distance from center and angle of correction using some fancy math.
-
-            frame_width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)
-            frame_height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
-            video_center = (int(frame_width/2.0), int(frame_height/2.0))
-
             target_center = (int(p1[0]+(bbox[2]/2.0)),int(p1[1]+(bbox[3]/2.0)))
             cv2.line(frame, video_center, target_center, (0,255,0), 2)
+
+            cv2.putText(frame, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
         else :
             # Tracking failure
@@ -92,7 +95,7 @@ if __name__ == '__main__' :
         cv2.putText(frame, tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2);
 
         # Display FPS on frame
-        cv2.putText(frame, "FPS : " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
+        cv2.putText(frame, "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
         # Display result
         cv2.imshow("Tracking video", frame)
