@@ -47,7 +47,7 @@ if __name__ == '__main__' :
         image = rawCapture.array
 
         # Read first frame
-        ok, frame = image # this line will probably break, consider format of video.read()'s return and data type
+        ok, frame = camera.capture(rawCapture, format="bgr") # this line will probably break, consider format of video.read()'s return and data type
         if not ok:
             print('Cannot read video file')
             sys.exit()
