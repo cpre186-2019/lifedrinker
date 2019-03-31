@@ -1,7 +1,18 @@
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import time
 import cv2
 import sys
 
 (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+
+# initialize the camera and grab a reference to the raw camera capture
+camera = PiCamera()
+camera_resolution_x = 640
+camera_resolution_y = 480
+camera.resolution = (camera_resolution_x, camera_resolution_y)
+camera.framerate = 32
+rawCapture = PiRGBArray(camera, size=(camera_resolution_x, camera_resolution_y))
 
 if __name__ == '__main__' :
 
@@ -31,19 +42,15 @@ if __name__ == '__main__' :
         if tracker_type == "CSRT":
             tracker = cv2.TrackerCSRT_create()
 
-    # Read video
-    video = cv2.VideoCapture("videos/StreetHighRes.mp4")
+        # grab an image from the camera
+        camera.capture(rawCapture, format="bgr")
+        image = rawCapture.array
 
-    # Exit if video not opened.
-    if not video.isOpened():
-        print('Could not open video')
-        sys.exit()
-
-    # Read first frame.
-    ok, frame = video.read()
-    if not ok:
-        print('Cannot read video file')
-        sys.exit()
+        # Read first frame
+        ok, frame = image # this line will probably break, consider format of video.read()'s return and data type
+        if not ok:
+            print('Cannot read video file')
+            sys.exit()
 
     # Define an initial bounding box within first frame (change this for a specific area)
     # bbox = (287, 23, 86, 320)
@@ -55,13 +62,17 @@ if __name__ == '__main__' :
     ok = tracker.init(frame, bbox)
 
     # Calculate center of image and store in a tuple
-    frame_width  = video.get(cv2.CAP_PROP_FRAME_WIDTH)
-    frame_height = video.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    frame_width  = camera_resolution_x
+    frame_height = camera_resolution_y
     video_center = (int(frame_width/2.0), int(frame_height/2.0))
 
     while True:
+        # grab an image from the camera_resolution_x
+        camera.capture(rawCapture, format="bgr")
+        image = rawCapture.array
+
         # Read a new frame
-        ok, frame = video.read()
+        ok, frame = image # this line will probably break, consider format of video.read()'s return and data type
         if not ok:
             break
 
