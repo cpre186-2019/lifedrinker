@@ -1,6 +1,9 @@
 # CPRE 186
 # Spring 2019
 # Written by: Alexis Renderos
+#
+# python version: 2.7
+#
 
 from pyfirmata import Arduino, util # used to talk to Arduino over USB.
 # import cv2 # openCV library
