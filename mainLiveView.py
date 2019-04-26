@@ -9,7 +9,7 @@ camera = PiCamera()
 camera_resolution_x = 640
 camera_resolution_y = 480
 camera.resolution = (camera_resolution_x, camera_resolution_y)
-camera.framerate = 60
+camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(camera_resolution_x, camera_resolution_y))
 
 # allow the camera to warmup
@@ -40,17 +40,11 @@ if tracker_type == "CSRT":
 camera.capture(rawCapture, format="bgr")
 image = rawCapture.array
 
-# Read first frame
-ok, frame = camera.capture(rawCapture, format="bgr") # this line will probably break, consider format of video.read()'s return and data type
-if not ok:
-    print('Cannot read video file')
-    sys.exit()
-
 # Select bounding box
-bbox = cv2.selectROI(frame, False)
+bbox = cv2.selectROI(cv2.flip(frame, -1), False)
 
 # Initialize tracker with first frame and bounding box
-ok = tracker.init(frame, bbox)
+ok = tracker.init(cv2.flip(frame, -1), bbox)
 
 # Calculate center of image and store in a tuple
 # This represents the theoretical line of fire
@@ -69,7 +63,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     timer = cv2.getTickCount()
 
     # Update tracker
-    ok, bbox = tracker.update(frame)
+    ok, bbox = tracker.update(cv2.flip(frame, -1))
 
     # Calculate Frames per second (FPS)
     fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
@@ -98,7 +92,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     cv2.putText(frame, "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
     # Display result
-    cv2.imshow("can finder", frame)
+    cv2.imshow("can finder", cv2.flip(frame, -1))
     key = cv2.waitKey(1) & 0xFF
 
     # clear the stream in preparation for the next frame
