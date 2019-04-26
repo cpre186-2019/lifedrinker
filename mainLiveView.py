@@ -61,9 +61,9 @@ video_center = (int(frame_width/2.0), int(frame_height/2.0))
 
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-	# grab the raw NumPy array representing the image, then initialize the timestamp
-	# and occupied/unoccupied text
-	image = frame.array
+    # grab the raw NumPy array representing the image, then initialize the timestamp
+    # and occupied/unoccupied text
+    image = frame.array
 
     # Start timer
     timer = cv2.getTickCount()
@@ -99,11 +99,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     # Display result
     cv2.imshow("can finder", frame)
-	key = cv2.waitKey(1) & 0xFF
+    key = cv2.waitKey(1) & 0xFF
 
-	# clear the stream in preparation for the next frame
-	rawCapture.truncate(0)
+    # clear the stream in preparation for the next frame
+    rawCapture.truncate(0)
 
-	# if the `q` key was pressed, break from the loop
-	if key == ord("q"):
-		break
+    # if the `q` key was pressed, break from the loop
+    if key == ord("q"):
+    	break
