@@ -38,7 +38,7 @@ if tracker_type == "CSRT":
 
 # grab an image from the camera
 camera.capture(rawCapture, format="bgr")
-image = rawCapture.array
+frame = rawCapture.array
 
 # Select bounding box
 bbox = cv2.selectROI(cv2.flip(frame, -1), False)
@@ -52,6 +52,8 @@ frame_width  = camera_resolution_x
 frame_height = camera_resolution_y
 video_center = (int(frame_width/2.0), int(frame_height/2.0))
 
+# clear buffer in anticipation of main loop
+rawCapture.truncate(0)
 
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
