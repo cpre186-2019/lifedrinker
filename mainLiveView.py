@@ -76,14 +76,29 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         # Tracking success
         p1 = (int(bbox[0]), int(bbox[1]))
         p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+
+        # note: colors are blue, green, red (lmao why)
+
+        # rectangle around target (blue)
         cv2.rectangle(image, p1, p2, (255,0,0), 2, 1)
 
         # from this information we can then derive distance from center and angle of correction using some fancy math.
         target_center = (int(p1[0]+(bbox[2]/2.0)),int(p1[1]+(bbox[3]/2.0)))
-        cv2.line(image, video_center, target_center, (0,255,0), 2)
+
+        # radius should be scaled with target_center
+        reticule_scalar = 10.0
+        radius = (((frame_height / 2.0) * reticule_scalar) / 100.0)
+
+        # target correction arrow (green)
+        cv2.arrowedLine(image, video_center, target_center, (0,255,0), 2)
 
         cv2.putText(image, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
+        # gun reticule (light blue)
+        cv2.Circle(image, video_center, radius, (255,255,0), thickness=1, lineType=8, shift=0)
+
+        # target reticule (red)
+        cv2.Circle(image, target_center, radius, (0,0,255), thickness=1, lineType=8, shift=0)
     else :
         # Tracking failure
         cv2.putText(image, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
