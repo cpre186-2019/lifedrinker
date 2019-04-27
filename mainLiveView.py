@@ -39,7 +39,7 @@ if tracker_type == "CSRT":
 
 # grab an image from the camera
 camera.capture(rawCapture, format="bgr")
-cv2(frame, -1) = rawCapture.array
+frame = cv2.flip(rawCapture.array, -1)
 
 # Select bounding box
 bbox = cv2.selectROI(frame, False)
