@@ -1,6 +1,7 @@
 # import the necessary packages
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import numpy as np
 import time
 import cv2
 
@@ -59,7 +60,7 @@ rawCapture.truncate(0)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
-    image = frame.array
+    image = np.array(frame.array)
 
     # Start timer
     timer = cv2.getTickCount()
