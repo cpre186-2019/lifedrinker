@@ -74,6 +74,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # radius should be scaled with target_center
     reticule_scalar = 5.0
     radius = (((frame_height / 2.0) * reticule_scalar) / 100.0)
+    radius = int(radius)
 
     # gun reticule (light blue)
     cv2.circle(image, video_center, radius, (255,255,0), thickness=2, lineType=8, shift=0)
