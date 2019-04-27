@@ -39,13 +39,13 @@ if tracker_type == "CSRT":
 
 # grab an image from the camera
 camera.capture(rawCapture, format="bgr")
-frame = rawCapture.array
+cv2(frame, -1) = rawCapture.array
 
 # Select bounding box
-bbox = cv2.selectROI(cv2.flip(frame, -1), False)
+bbox = cv2.selectROI(frame, False)
 
 # Initialize tracker with first frame and bounding box
-ok = tracker.init(cv2.flip(frame, -1), bbox)
+ok = tracker.init(frame, bbox)
 
 # Calculate center of image and store in a tuple
 # This represents the theoretical line of fire
@@ -60,13 +60,13 @@ rawCapture.truncate(0)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
-    image = np.array(frame.array)
+    image = cv2.flip(np.array(frame.array), -1)
 
     # Start timer
     timer = cv2.getTickCount()
 
     # Update tracker
-    ok, bbox = tracker.update(cv2.flip(image, -1))
+    ok, bbox = tracker.update(image)
 
     # Calculate Frames per second (FPS)
     fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
@@ -76,26 +76,26 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         # Tracking success
         p1 = (int(bbox[0]), int(bbox[1]))
         p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
-        cv2.rectangle(cv2.flip(image, -1), p1, p2, (255,0,0), 2, 1)
+        cv2.rectangle(image, p1, p2, (255,0,0), 2, 1)
 
         # from this information we can then derive distance from center and angle of correction using some fancy math.
         target_center = (int(p1[0]+(bbox[2]/2.0)),int(p1[1]+(bbox[3]/2.0)))
-        cv2.line(cv2.flip(image, -1), video_center, target_center, (0,255,0), 2)
+        cv2.line(image, video_center, target_center, (0,255,0), 2)
 
-        cv2.putText(cv2.flip(image, -1), "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.putText(image, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
     else :
         # Tracking failure
-        cv2.putText(cv2.flip(image, -1), "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.putText(image, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
     # Display tracker type on frame
-    cv2.putText(cv2.flip(image, -1), tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2);
+    cv2.putText(image, tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2);
 
     # Display FPS on frame
-    cv2.putText(cv2.flip(image, -1), "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
+    cv2.putText(image, "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
     # Display result
-    cv2.imshow("can finder", cv2.flip(image, -1))
+    cv2.imshow("can finder", image)
     key = cv2.waitKey(1) & 0xFF
 
     # clear the stream in preparation for the next frame
