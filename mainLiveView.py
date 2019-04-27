@@ -7,8 +7,8 @@ import cv2
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera_resolution_x = 640
-camera_resolution_y = 480
+camera_resolution_x = 1280
+camera_resolution_y = 720
 camera.resolution = (camera_resolution_x, camera_resolution_y)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(camera_resolution_x, camera_resolution_y))
@@ -71,6 +71,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # Calculate Frames per second (FPS)
     fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
 
+    # gun reticule (light blue)
+    cv2.circle(image, video_center, radius, (255,255,0), thickness=2, lineType=8, shift=0)
+
     # Draw bounding box
     if ok:
         # Tracking success
@@ -86,19 +89,16 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         target_center = (int(p1[0]+(bbox[2]/2.0)),int(p1[1]+(bbox[3]/2.0)))
 
         # radius should be scaled with target_center
-        reticule_scalar = 10.0
+        reticule_scalar = 5.0
         radius = (((frame_height / 2.0) * reticule_scalar) / 100.0)
 
         # target correction arrow (green)
-        cv2.arrowedLine(image, video_center, target_center, (0,255,0), 2)
-
-        cv2.putText(image, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
-
-        # gun reticule (light blue)
-        cv2.Circle(image, video_center, radius, (255,255,0), thickness=1, lineType=8, shift=0)
+        cv2.arrowedLine(image, video_center, target_center, (0,255,0), 3)
 
         # target reticule (red)
-        cv2.Circle(image, target_center, radius, (0,0,255), thickness=1, lineType=8, shift=0)
+        cv2.circle(image, target_center, radius, (0,0,255), thickness=2, lineType=8, shift=0)
+
+        cv2.putText(image, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
     else :
         # Tracking failure
         cv2.putText(image, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
