@@ -22,7 +22,7 @@ if (debug):
     # Create a Video Caputure object
     cap = cv2.VideoCapture(0)
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (camera_resolution_x,camera_resolution_y))
 
 
 # allow the camera to warmup
@@ -111,21 +111,21 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         # target reticule (red)
         cv2.circle(image, target_center, radius, (0,0,255), thickness=2, lineType=8, shift=0)
 
-        cv2.putText(image, "Tracking Successful", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.putText(image, "Tracking Successful", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
     else :
         # Tracking failure
-        cv2.putText(image, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+        cv2.putText(image, "Tracking failure detected", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
     # Display tracker type on frame
-    cv2.putText(image, tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2);
+    # cv2.putText(image, tracker_type + " Tracker", (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2);
 
     # Display FPS on frame
-    cv2.putText(image, "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
+    # cv2.putText(image, "FPS: " + str(int(fps)), (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
     # check for debug output and save if needed
     if (debug):
         # Write the frame into the file 'output.avi'
-        out.write(frame)
+        out.write(image)
 
     # Display result
     cv2.namedWindow("can finder", cv2.WND_PROP_FULLSCREEN)
