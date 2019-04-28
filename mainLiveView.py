@@ -7,7 +7,7 @@ import cv2
 
 # IMPORTANT FOR DEBUG PURPOSES
 # Pretty obvs, but make this true to have debug output
-debug = False
+debug = True
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -22,7 +22,7 @@ if (debug):
     # Create a Video Caputure object
     cap = cv2.VideoCapture(0)
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (camera_resolution_x,camera_resolution_y))
+    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (camera_resolution_x, camera_resolution_y))
 
 
 # allow the camera to warmup
