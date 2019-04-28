@@ -5,6 +5,10 @@ import numpy as np
 import time
 import cv2
 
+# IMPORTANT FOR DEBUG PURPOSES
+# Pretty obvs, but make this true to have debug output
+debug = False
+
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera_resolution_x = 640
@@ -13,12 +17,20 @@ camera.resolution = (camera_resolution_x, camera_resolution_y)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(camera_resolution_x, camera_resolution_y))
 
+
+if (debug):
+    # Create a Video Caputure object
+    cap = cv2.VideoCapture(0)
+    # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+
+
 # allow the camera to warmup
 time.sleep(0.1)
 
 # Set up the tracker_type
 tracker_types = ['BOOSTING', 'MIL','KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
-tracker_type = tracker_types[2] # 2 = TrackerKCF_create
+tracker_type = tracker_types[2] # option 2 = TrackerKCF_create
 
 if tracker_type == 'BOOSTING':
     tracker = cv2.TrackerBoosting_create()
@@ -110,6 +122,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # Display FPS on frame
     cv2.putText(image, "FPS: " + str(int(fps)), (100,50), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2);
 
+    # check for debug output and save if needed
+    if (debug):
+        # Write the frame into the file 'output.avi'
+        out.write(frame)
+
     # Display result
     cv2.namedWindow("can finder", cv2.WND_PROP_FULLSCREEN)
     cv2.setWindowProperty("can finder",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
@@ -122,3 +139,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
     	break
+
+# When everything done, release the video capture and video write objects
+rawCapture.release()
+out.release()
+
+# Closes all the frames
+cv2.destroyAllWindows()
