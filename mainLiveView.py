@@ -22,7 +22,7 @@ if (debug):
     # Create a Video Caputure object
     cap = cv2.VideoCapture(0)
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+    out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (camera_resolution_x,camera_resolution_y))
 
 
 # allow the camera to warmup
@@ -125,7 +125,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # check for debug output and save if needed
     if (debug):
         # Write the frame into the file 'output.avi'
-        out.write(frame)
+        out.write(image)
 
     # Display result
     cv2.namedWindow("can finder", cv2.WND_PROP_FULLSCREEN)
