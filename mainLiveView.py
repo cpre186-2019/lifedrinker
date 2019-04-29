@@ -7,7 +7,7 @@ import cv2
 
 # IMPORTANT FOR DEBUG PURPOSES
 # Pretty obvs, but make this true to have debug output
-debug = True
+debug = False
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
