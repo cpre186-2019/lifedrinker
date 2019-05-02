@@ -18,3 +18,10 @@ Mounted on the Nerf Blaster is a screen that displays the current camera feed to
 
 # Conclusion and Analysis
 Overall, the CNN based algorithm performed poorly in comparison to the purely algorithmic KCF solution. We found that the CNN had many issues with identifying the cans primarily due to the low resolution of the target. The CNN overall did much better once the camera resolution was increased, but due to the low processing power available and the low native resolution of the screen used, the maximum resolution we could feasibly use was 640x480. In contrast, the algorithmic solution tracked its targets exceptionally well, but struggled to maintain focus on the target once the lighting conditions changed. We expect both algorithms to increase substantially in effectiveness once a different camera is implemented with either a higher native resolution or an optical zoom feature, in addition to a processor with more resources available.
+
+
+<object data="https://github.com/cpre186-2019/lifedrinker/blob/master/PosterPresentationv4.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/cpre186-2019/lifedrinker/blob/master/PosterPresentationv4.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/cpre186-2019/lifedrinker/blob/master/PosterPresentationv4.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
