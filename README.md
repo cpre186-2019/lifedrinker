@@ -1,140 +1,20 @@
-This is our CprE 186 project.
+# Abstract
+The aim of this project is to identify a chosen object of interest at range using a camera feed and an image processing algorithm to assist in the detection, identification and tracking of the target. This solution was then implemented as a rail-mounted tactical scope attachment for a Nerf Blaster. The attachment provides the user with real-time feedback on their aim using a side mounted screen.
 
-It is by Rolf, Ritz, William, and Alexis.
+# Data Collection and Analysis
+To properly analyze incoming image data, we must first determine and analyze key characteristics of our target. The three chosen targets as shown in Figure 1 were photographed over 1,000 times each in varying lighting conditions and at varying angles, distances, and varying degrees of occlusion. This provided us with a set of testing data and training data for our machine learning based target detection and identification algorithm. We also analyzed the colors and markings of the targets in addition to the angle of the target relative to the camera and the lighting conditions. This was later used to create an object tracking algorithm.
 
-We designed a digital screen with computer vision to identify targets and show where the user should point the gun.  It also has motorized iron sights to assist.
+# Target Detection and Identification
+Target detection and identification is primarily achieved through the implementation of a machine learning based algorithm. A _Convolutional Neural Network_ (CNN) was trained on a dataset of nearly 3,000 photos of the three targets in order to create a comprehensive profile of what the targets looked in the eyes of a digital camera. This training process is outlined in Figure 2. The resulting model was then used to analyze incoming camera data to locate and identify any potential targets in the field of view.
 
-Copyright 2019.
+# Target Tracking
+Target tracking is accomplished using a hybridized algorithm known as KCF, or _Kernelized Correlation Filters_. We chose this algorithm due to its high speed, exceptional accuracy, and excellent failure detection. Unfortunately, KCF does not recover well from full occlusion, but it is able to recover from this using the target detection and identification capabilities of the machine learning model.
 
-This software is for a raspberry pi running raspian stretch
+# Hardware Implementation
+As a proof of concept, we took our two algorithms and implemented them as a camera-based, rail mounted tactical scope attachment for a Nerf Blaster. The computational side is supported by a Raspberry Pi 3 connected to a camera, while power is sourced from the batteries inside the Nerf Blaster. Attached to the barrel of the blaster is an RGB LED light ring to normalize the brightness of the target.
 
-Thanks to: https://www.pyimagesearch.com/2017/09/04/raspbian-stretch-install-opencv-3-python-on-your-raspberry-pi/
+# User Feedback
+Mounted on the Nerf Blaster is a screen that displays the current camera feed to the user. A reticule representing the center of where the blaster should shoot is displayed on-screen in light blue while the center of the target is highlighted on-screen with a bright red circle. In addition to this, a dark blue rectangle is displayed to represent the shape and location of the target. Displayed from the center of the target to the reticule is a green arrow indicating the error in aim. Figures 3 and 4 represent the tracking capabilities of the algorithm with a static target and a dynamic background, while Figures 5 and 6 represent the object detection and identification properties of the algorithm with other targets. Figure 7 depicts the user approaching the target as they react to on-screen feedback while Figure 8 depicts a failure of the tracking algorithm after prolonged occlusion of the target.
 
-Dependencies:
-   
-   Python version: 2.7
-      Packages required:
-
-		build-essential 
-   		cmake 
-   		pkg-config
-   		libjpeg-dev 
-   		libtiff5-dev 
-   		libjasper-dev 
-   		libpng12-dev
-   		libavcodec-dev 
-   		libavformat-dev 
-   		libswscale-dev
-   		libv4l-dev
-   		libxvidcore-dev 
-   		libx264-dev
-        libatlas-base-dev
-        gfortran
-        python-3 (for header files)
-        
-        
-        
-Step 1: Install dependencies      
-  
-  Install dependencies and python using apt.
-  You can either use sudo or have a superuser shell.
-   
-	$ sudo apt install python2.7 python2.7-dev build-essential cmake pkg-config libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
-                   libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgtk2.0-dev libgtk-3-dev
-                   libatlas-base-dev gfortran python3-dev
-                   
-Step 2: Download OpenCV source code
-
-  Be sure to be in your home directory.
-  
-  Download and unzip source code for opencv3.
-  
-	$ wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.3.0.zip
-	$ unzip opencv.zip
-  
-  For extra credits, download the opencv_contrib repo and unzip.
-  
-	$ wget -O opencv_contrib.zip https://github.com/Itseez/opencv_contrib/archive/3.3.0.zip
-	$ unzip opencv_contrib.zip
-  
-  Additionally, get pip - the python package manager.
-  
-	$ wget https://bootstrap.pypa.io/get-pip.py
-	$ sudo python get-pip.py
-  
-  Get virtualenv for your python environment.
-  
-	$ sudo pip install virtualenv virtualenvwrapper
-	$ sudo rm -rf ~/.cache/pip
-  
-  
-  Update ~/.profile
-	$ nano ~/.profile
-  
-	/# ~/.profile
-	export WORKON_HOME=$HOME/.virtualenvs
-	export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
-	source /usr/local/bin/virtualenvwrapper.sh
-  
-  
-  Now load this ~/.profile.
-  
-	$ source ~/.profile
-  
-  
-  Create virtual environment
-  
-	$ mkvirtualenv cv -p python2
-	
-	
-  Install python dependency
-  
-	$ pip install numpy
-	
-
-  Compile/install OpenCV
-  
-	$ workon cv
-	
-	$ cd ~/opencv-3.3.0/
-	$ mkdir build
-	$ cd build
-	$ cmake -D CMAKE_BUILD_TYPE=RELEASE \
-		-D CMAKE_INSTALL_PREFIX=/usr/local \
-		-D INSTALL_PYTHON_EXAMPLES=ON \
-		-D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-3.3.0/modules \
-		-D BUILD_EXAMPLES=ON ..
-  
-  
-  Note: if you have problems with compiling, change the size of your
-		swap space.
-		
-  
-  Execute:
-  
-	$ make -j4
-	
-	$ sudo make install
-	$ sudo ldconfig
-	
-	
-  Finalize installation:
-  
-	$ cd ~/.virtualenvs/cv/lib/python2.7/site-packages/
-	$ ln -s /usr/local/lib/python2.7/site-packages/cv2.so cv2.so
-	
-  
-  Test installation:
-  
-	$ source ~/.profile
-	$ workon cv
-	$ python
-	>>> import cv2
-	>>> cv2.__version__
-	'3.3.0'
-	>>>
-	
-  
-  
-        
-             
+# Conclusion and Analysis
+Overall, the CNN based algorithm performed poorly in comparison to the purely algorithmic KCF solution. We found that the CNN had many issues with identifying the cans primarily due to the low resolution of the target. The CNN overall did much better once the camera resolution was increased, but due to the low processing power available and the low native resolution of the screen used, the maximum resolution we could feasibly use was 640x480. In contrast, the algorithmic solution tracked its targets exceptionally well, but struggled to maintain focus on the target once the lighting conditions changed. We expect both algorithms to increase substantially in effectiveness once a different camera is implemented with either a higher native resolution or an optical zoom feature, in addition to a processor with more resources available.
